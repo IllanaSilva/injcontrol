@@ -141,7 +141,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .toast.ok{border-color:rgba(46,204,138,.3);color:var(--green)}
 .toast.err{border-color:rgba(240,90,90,.3);color:var(--red)}
 
-.setup-card{background:var(--bg2);border:1px solid rgba(79,142,247,.22);border-radius:var(--radius);padding:26px;margin-bottom:18px}
 .step-row{display:flex;gap:13px;margin-bottom:20px}
 .step-n{width:28px;height:28px;background:rgba(79,142,247,.14);color:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;margin-top:2px}
 .step-txt{font-size:13px;color:var(--text2);line-height:1.8}
@@ -180,14 +179,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
       Base de Dados
     </button>
-    <span class="nav-sec">Configuração</span>
-    <button class="nav-btn" onclick="goPage('setup')" id="nb-setup">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      Conectar Planilha
-    </button>
   </nav>
   <div class="sidebar-footer">
-    <div class="s-status"><div class="s-dot" id="sdot"></div><span id="stxt">Sem planilha conectada</span></div>
+    <div class="s-status"><div class="s-dot" id="sdot"></div><span id="stxt">Carregando dados...</span></div>
     <button onclick="syncData()" style="margin-top:8px;font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;padding:0">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       Sincronizar agora
@@ -249,55 +243,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
   <!-- SETUP -->
-  <div class="page" id="page-setup">
-    <div class="pg-title">Conectar Google Sheets</div>
-    <div class="pg-sub">Configure uma vez — o site se atualiza automaticamente para todos</div>
-
-    <div class="setup-card">
-      <div style="font-size:14px;font-weight:600;margin-bottom:20px">⚡ Configuração via Google Apps Script (recomendado)</div>
-      <div class="step-row">
-        <div class="step-n">1</div>
-        <div class="step-txt">Acesse <strong>script.google.com</strong> → clique em <strong>Novo projeto</strong>.</div>
-      </div>
-      <div class="step-row">
-        <div class="step-n">2</div>
-        <div class="step-txt">Apague o código existente e cole o seguinte (substitua o ID pelo ID da sua planilha se necessário):
-          <div style="margin-top:10px;background:var(--bg4);border-radius:8px;padding:14px;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);line-height:1.9;white-space:pre-wrap;word-break:break-all">function doGet(e) {
-  const id = '2PACX-1vQJz-dIuc4BbA1pS7bdtz7qWnRDkV0Fy3WkaET9UU4iqrE0IYKiRJHdd6RVvq4CQskMEnHr7_8FXDAO';
-  const gid = e.parameter.gid || '0';
-  const url = `https://docs.google.com/spreadsheets/d/e/${id}/pub?gid=${gid}&single=true&output=csv`;
-  const csv = UrlFetchApp.fetch(url).getContentText();
-  return ContentService.createTextOutput(csv).setMimeType(ContentService.MimeType.TEXT);
-}</div>
-        </div>
-      </div>
-      <div class="step-row">
-        <div class="step-n">3</div>
-        <div class="step-txt">Clique em <strong>Implantar → Nova implantação</strong>. Tipo: <strong>App da Web</strong>. Executar como: <strong>Eu</strong>. Quem tem acesso: <strong>Qualquer pessoa</strong>. Clique em <strong>Implantar</strong>.</div>
-      </div>
-      <div class="step-row">
-        <div class="step-n">4</div>
-        <div class="step-txt">Copie a <strong>URL da implantação</strong> (termina em <code>/exec</code>) e cole no campo abaixo.</div>
-      </div>
-      <label style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px">URL do Google Apps Script ou do Google Sheets (CSV)</label>
-      <input class="url-input" id="sheets-url" placeholder="https://script.google.com/macros/s/.../exec">
-      <div style="display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="saveAndConnect()">Salvar e Conectar</button>
-        <button class="btn btn-ghost" onclick="clearConn()">Limpar conexão</button>
-        <span id="setup-status" style="font-size:12px;color:var(--text3)"></span>
-      </div>
-    </div>
-
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
-      <div style="font-size:13px;font-weight:500;margin-bottom:10px">Colunas esperadas na aba CONSOLIDADO</div>
-      <div style="font-size:12px;color:var(--text3);line-height:2.2;font-family:'DM Mono',monospace">
-        ID CLIENTE &nbsp;·&nbsp; REGIÃO &nbsp;·&nbsp; UF &nbsp;·&nbsp; KWH &nbsp;·&nbsp; FORNECEDORA &nbsp;·&nbsp; DATA ATIVO &nbsp;·&nbsp; QTD DE DIAS ATIVO &nbsp;·&nbsp; STATUS FORNECEDORA &nbsp;·&nbsp; FASE &nbsp;·&nbsp; PREVISÃO
-      </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--text3)">
-        Basta editar sua planilha normalmente no Google Sheets e clicar <strong style="color:var(--text2)">Atualizar</strong> no site para ver os dados mais recentes.
-      </div>
-    </div>
-  </div>
 </main>
 </div>
 
@@ -331,7 +276,7 @@ window.goPage=function(page,forn){
   document.getElementById('page-'+page).classList.add('active');
   const nb=document.getElementById('nb-'+page);if(nb)nb.classList.add('active');
   curPage=page;
-  const T={dashboard:'Dashboard',detail:'Detalhamento',database:'Base de Dados',setup:'Conectar Planilha'};
+  const T={dashboard:'Dashboard',detail:'Detalhamento',database:'Base de Dados'};
   document.getElementById('tbtitle').textContent=T[page]||page;
   if(page==='detail'&&forn){detailForn=forn;renderDetail(forn);}
   if(page==='database'){fillDBF();renderDB();}
@@ -339,27 +284,12 @@ window.goPage=function(page,forn){
 };
 
 // ── SYNC ────────────────────────────────────────────
-const getURL=()=>localStorage.getItem('gs_url')||'';
+const FIXED_URL='https://script.google.com/macros/s/AKfycbxEikHpqZ8E0WPDRoSa6MbI3FmbNTfFWJYG634_Hz9e3ltlxmnSATpVbm3Xp-omaPjw/exec';
+const getURL=()=>FIXED_URL;
 
-window.saveAndConnect=async function(){
-  const url=val('sheets-url');
-  if(!url){toast('Cole a URL','err');return;}
-  if(!url.includes('google.com')){toast('URL inválida — deve ser do Google','err');return;}
-  localStorage.setItem('gs_url',url);
-  document.getElementById('setup-status').textContent='Conectando...';
-  const ok=await syncData(true);
-  document.getElementById('setup-status').innerHTML=ok
-    ?'<span style="color:var(--green)">✓ Conectado com sucesso!</span>'
-    :'<span style="color:var(--red)">Erro ao conectar. Veja o console (F12) para detalhes.</span>';
-};
 
-window.clearConn=function(){
-  localStorage.removeItem('gs_url');localStorage.removeItem('gs_cache');
-  clients=[];dot('off');stxt('Sem planilha conectada');
-  document.getElementById('sheets-url').value='';
-  document.getElementById('setup-status').textContent='Conexão removida.';
-  refreshAll();toast('Conexão removida');
-};
+
+
 
 async function fetchCSV(url){
   if(url.includes("script.google.com")){
@@ -395,7 +325,7 @@ async function fetchCSV(url){
 
 window.syncData=async function(silent=false){
   const url=getURL();
-  if(!url){if(!silent){toast('Configure a planilha primeiro','err');goPage('setup');}return false;}
+  if(!url){return false;}
   if(!silent)toast('Sincronizando...','');
   try{
     const text = await fetchCSV(url);
@@ -475,7 +405,7 @@ function renderDash(){
         <div style="font-size:40px;margin-bottom:16px">🔗</div>
         <div style="font-size:16px;font-weight:500;margin-bottom:8px">Planilha não conectada</div>
         <div style="font-size:13px;color:var(--text3);margin-bottom:20px">Conecte seu Google Sheets para visualizar os dados</div>
-        <button class="btn btn-primary" onclick="goPage('setup')" style="margin:0 auto">Conectar agora</button>
+        
       </div>`;
     return;
   }
@@ -710,8 +640,6 @@ function refreshAll(){
       </div>`;
     return;
   }
-  const url=getURL();
-  if(url)document.getElementById('sheets-url').value=url;
   const cache=JSON.parse(localStorage.getItem('gs_cache')||'null');
   if(cache&&cache.d&&cache.d.length){
     clients=cache.d;
